@@ -5,21 +5,21 @@ from astropy.io import fits
 from pandas import read_csv
 
 overwrite=True
-obsdate = '20230802'
+obsdate = '20240913'
 obslog_file_format = '{}-obslog.tsv'
 # obsdate_file_abs = os.path.join('F:', 'leach-obslogs', obslog_file_format.format(obsdate))
 obsdate_file_abs = os.path.join('E:', 'obslogs', obslog_file_format.format(obsdate))
 
 # output_directory = os.path.join('F:', 'Leach data', 'obslog_reduce', obsdate)
-output_directory = os.path.join('E:', 'asdetector-data', 'output', 'obslog_reduce', obsdate)
+output_directory = os.path.join('G:', 'asdetector-data', 'output', 'obslog_reduce', obsdate)
 
 if not os.path.isdir(output_directory):
     os.makedirs(output_directory)
 
-# fits_file_format = '{}.rimas.{:04d}.{}.fits'
-fits_file_format = '{}.rimas.{:04d}.{}.ramp.fits'
+fits_file_format = '{}.rimas.{:04d}.{}.fits'
+# fits_file_format = '{}.rimas.{:04d}.{}.ramp.fits'
 # fits_file_format_abs = os.path.join('F:', 'Leach data', 'fowler', obsdate, fits_file_format)
-fits_file_format_abs = os.path.join('E:', 'asdetector-data', 'output', 'ramps', obsdate, fits_file_format)
+fits_file_format_abs = os.path.join('G:', 'asdetector-data', 'output', 'reduced', obsdate, fits_file_format)
 
 bands = ['YJ', 'HK']
 

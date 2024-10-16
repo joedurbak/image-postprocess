@@ -6,22 +6,23 @@ import numpy as np
 from astropy.io import fits
 from scipy.optimize import curve_fit, minimize
 
-show_images = True
-show_line_plots = True
+show_images = False
+show_line_plots = False
 show_optimization_fit_plot = True
 crop = False
-obsdate = '20230810'
-focus_data_dir = f'E:\\asdetector-data\\output\\reduced\\{obsdate}\\focus'
+obsdate = '20240805'
+# obsdate = '20240524'
+focus_data_dir = f'G:\\asdetector-data\\output\\reduced\\{obsdate}\\focus'
 focus_data_files = [os.path.join(focus_data_dir, f) for f in os.listdir(focus_data_dir) if f.endswith('.fits')]
 yj_focus_data_files = [f for f in focus_data_files if f.endswith('YJ.fits')]
 hk_focus_data_files = [f for f in focus_data_files if f.endswith('HK.fits')]
 focus_data_info = {
-    # 'YJ': {
-    #     'y_range': (2000, 2055), 'x_range': (1800, 1845), 'data_files': yj_focus_data_files, 'vmin': 0, 'vmax': 15000
-    # },
+    'YJ': {
+        'y_range': (2010-30, 2010+30), 'x_range': (1837-60, 1837+60), 'data_files': yj_focus_data_files, 'vmin': 0, 'vmax': 500
+    },
     # 'HK': {'y_range': (2265, 2358), 'x_range': (2176, 2319), 'data_files': hk_focus_data_files}
     'HK': {
-        'y_range': (1863-30, 1863+100-60), 'x_range': (1865+100, 2203), 'data_files': hk_focus_data_files, 'vmin': 0, 'vmax': 4000
+        'y_range': (1855-30, 1855+30), 'x_range': (2088-80, 2088+80), 'data_files': hk_focus_data_files, 'vmin': 0, 'vmax': 30000
     }
 }
 
@@ -41,7 +42,7 @@ def parabola(x, a, b, c):
 def minimize_tophat_fit(x, y):
     def objective(params, _x, _y):
         return np.sum(np.abs(tophat(_x, *params) - _y))
-    guess = np.asarray((np.max(y), np.median(x), 1.5 * np.median(x), np.percentile(y, 10)))
+    guess = np.asarray(np.median(x), (np.max(y), 1.5 * np.median(x), np.percentile(y, 10)))
     # print(guess)
     res = minimize(objective, guess, args=(x, y), method='Nelder-Mead')
     # print(res.x)
@@ -62,6 +63,7 @@ def minimize_gauss_fit(x, y, guess=None):
             _width,
             np.percentile(y, 10)
         )
+        print(guess)
     _popt, _ = curve_fit(gauss, x, y, guess)
     return _popt
 

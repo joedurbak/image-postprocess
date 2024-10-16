@@ -4,11 +4,11 @@ import numpy as np
 from astropy.io import fits
 from pandas import read_csv
 
-obsdate = '20230810'
+obsdate = '20240805'
 logfile = f'C:\\PythonProjects\\image-postprocess\\focus_logs\\focus_log_{obsdate}.csv'
 bands = ['YJ', 'HK']
 # data_dir = f'F:\\Leach data\\fowler\\{obsdate}'
-data_dir = f'E:\\asdetector-data\\output\\reduced\\{obsdate}'
+data_dir = f'G:\\asdetector-data\\output\\reduced\\{obsdate}'
 # output_dir = data_dir.replace('fowler', 'focus')
 output_dir = os.path.join(data_dir, 'focus')
 if not os.path.isdir(output_dir):
