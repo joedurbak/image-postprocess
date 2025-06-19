@@ -452,20 +452,23 @@ if __name__ == '__main__':
     # plot_noise_distribution(total_noise_filenames, noise_save_dir, '.total.fits', xlabel='Total Noise (e-)', unit='e-')
 
     # gain_exposures = [np.arange(3, 103)]
-    gain_exposures = [np.arange(10, 110)]
-    gain_indices = np.arange(0, 22)
+    # gain_exposures = [np.arange(10, 110)]  # HK run numbers
+    gain_exposures = [np.arange(120, 219)]  # YJ run numbers
+    gain_indices = np.arange(2, 22)
     gain_dates = [20240820]
     gain_directory = r'G:\asdetector-data\output\raw\{date}'
-    gain_bands = ['HK']
+    gain_bands = ['YJ']
     gain_filenames = get_filenames(gain_dates, gain_exposures, gain_indices, gain_directory, bands=gain_bands)
     gain_save_dir = os.path.join(
         gain_directory.format(date=gain_dates[-1]), 'gain',
         'exposures_{}-{}'.format(gain_exposures[0][0], gain_exposures[0][-1]))
-    # calculate_mean_std(gain_filenames, gain_save_dir, mid_point=(2062,1869), box_size=1000)
-    gains = calculate_gain(gain_save_dir, [(500, 500)], [256])
+    # calculate_mean_std(gain_filenames, gain_save_dir, mid_point=(2062,1869), box_size=1000)  # HK coords
+    # calculate_mean_std(gain_filenames, gain_save_dir, mid_point=(1828, 2058), box_size=1000)  # YJ coords
+    gains = calculate_gain(gain_save_dir, [(310, 700)], [128])
     print(gains)
-    alphas = np.asarray([0.0161])  # my calculation based on all 8 neighbors: 0.0161. DCL calculations based on 4: 0.023
-    print(np.asarray(gains)*(1-8*alphas))
+    # alphas = np.asarray([0.0161])  # my calculation based on all 8 neighbors: 0.0161. DCL calculations based on 4: 0.023 HK
+    alphas = np.asarray([0.0139])  # my calculation based on 4 neighbors: 0.0139 YJ
+    print(np.asarray(gains)*(1-4*alphas))
     # plot_ramp_linearity(gain_filenames, middles={'HK': (2032, 1847)}, box_widths={'HK': 256})
 
     # ramp_files = get_filenames_dir(r'E:\asdetector-data\output\raw\20230803')

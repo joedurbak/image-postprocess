@@ -7,22 +7,30 @@ from astropy.io import fits
 from scipy.optimize import curve_fit, minimize
 
 show_images = False
-show_line_plots = False
+show_line_plots = True
 show_optimization_fit_plot = True
 crop = False
-obsdate = '20240805'
+# obsdate = '20250616'
+obsdate = '20250619'
+# obsdate = '20240805'
 # obsdate = '20240524'
-focus_data_dir = f'G:\\asdetector-data\\output\\reduced\\{obsdate}\\focus'
+focus_data_dir = f'E:\\asdetector-data\\output\\reduced\\{obsdate}\\focus'
+# focus_data_dir = f'E:\\asdetector-data\\output\\reduced\\{obsdate}'
 focus_data_files = [os.path.join(focus_data_dir, f) for f in os.listdir(focus_data_dir) if f.endswith('.fits')]
 yj_focus_data_files = [f for f in focus_data_files if f.endswith('YJ.fits')]
 hk_focus_data_files = [f for f in focus_data_files if f.endswith('HK.fits')]
+yj_focus_data_files.sort()
+hk_focus_data_files.sort()
 focus_data_info = {
-    'YJ': {
-        'y_range': (2010-30, 2010+30), 'x_range': (1837-60, 1837+60), 'data_files': yj_focus_data_files, 'vmin': 0, 'vmax': 500
-    },
+    # 'YJ': {
+    #     'y_range': (2359-30, 2359+30), 'x_range': (1962-60, 1962+60), 'data_files': yj_focus_data_files, 'vmin': 0, 'vmax': 10000
+    # },
     # 'HK': {'y_range': (2265, 2358), 'x_range': (2176, 2319), 'data_files': hk_focus_data_files}
     'HK': {
-        'y_range': (1855-30, 1855+30), 'x_range': (2088-80, 2088+80), 'data_files': hk_focus_data_files, 'vmin': 0, 'vmax': 30000
+        # 'y_range': (1855-30, 1855+30), 'x_range': (2088-80, 2088+80), 'data_files': hk_focus_data_files, 'vmin': 0, 'vmax': 30000
+        'y_range': (1801 - 30, 1801 + 30), 'x_range': (2014 - 30, 2014 + 30), 'data_files': hk_focus_data_files,
+        'vmin': 0, 'vmax': 15000
+
     }
 }
 
@@ -108,13 +116,18 @@ def crop_image(img, plot_title='', show=True):
     return cutoff_img
 
 
+
+
 def main():
     for band, info in focus_data_info.items():
         _guess = None
         fit_info = []
         fit_number = []
         for data_file in info['data_files']:
-            _fit_num = float(re.findall('\d+', data_file)[-1])
+            # _fit_num = float(re.findall('\d+', data_file)[-1])
+            bandpass = data_file.split('.')[-2]
+            bandpass_focus_dict = {'YJ': 'FOCUS0', 'HK': 'FOCUS1'}
+            _fit_num = fits.getval(data_file, bandpass_focus_dict[bandpass])
             fit_number.append(_fit_num)
             image = fits.getdata(data_file)[info['y_range'][0]:info['y_range'][1], info['x_range'][0]:info['x_range'][1]]
             if show_images:
@@ -123,12 +136,13 @@ def main():
                 plt.show()
             if crop:
                 image = crop_image(image, str(_fit_num), show_images)
-            fit_array = np.median(image, axis=0)
+            fit_array = np.nanmedian(image, axis=0)
             fit_pix = np.arange(fit_array.shape[0])
             popt = minimize_gauss_fit(fit_pix, fit_array, _guess)
             _guess = popt
             # popt = minimize_tophat_fit(fit_pix, fit_array)
-            fit_info.append(np.abs(popt[2]))  # adding standard deviation to list
+            # fit_info.append(np.abs(popt[2]))  # adding standard deviation to list TODO: uncomment
+            fit_info.append(np.max(image))  # TODO: comment out
             # fit_info.append(np.abs(popt[1]))  # adding mean to list
             # fit_info.append(np.abs(popt[0]))  # adding amplitude to list
             if show_line_plots:

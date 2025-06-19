@@ -4,8 +4,8 @@ import numpy as np
 from astropy.io import fits
 from pandas import read_csv
 
-overwrite=True
-obsdate = '20240913'
+overwrite=False
+obsdate = '20240906'
 obslog_file_format = '{}-obslog.tsv'
 # obsdate_file_abs = os.path.join('F:', 'leach-obslogs', obslog_file_format.format(obsdate))
 obsdate_file_abs = os.path.join('E:', 'obslogs', obslog_file_format.format(obsdate))
