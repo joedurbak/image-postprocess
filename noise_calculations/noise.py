@@ -432,9 +432,9 @@ if __name__ == '__main__':
     dark_filenames = get_filenames(dark_dates, dark_exposures, dark_indices)
     dark_save_dir = os.path.join(_raw_dir_format.format(date=dark_dates[-1]), 'dark')
     dark_exposure_times = dark_indices * frame_time
-    # calculate_ramp(dark_filenames, dark_exposure_times, save_dir=dark_save_dir, gain=theoretical_gain)
-    # plot_noise_distribution(dark_filenames, dark_save_dir, '.dark.fits', unit='e-/s', xlabel='Dark Current (e-/s)')
-    # plot_noise_distribution(dark_filenames, dark_save_dir, '.dark.var.fits', unit='e-/s')
+    calculate_ramp(dark_filenames, dark_exposure_times, save_dir=dark_save_dir, gain=theoretical_gain)
+    plot_noise_distribution(dark_filenames, dark_save_dir, '.dark.fits', unit='e-/s', xlabel='Dark Current (e-/s)')
+    plot_noise_distribution(dark_filenames, dark_save_dir, '.dark.var.fits', unit='e-/s')
 
     # total_noise_dates = [20230801]
     # total_noise_exposures = [np.arange(7, 107)]
@@ -447,9 +447,9 @@ if __name__ == '__main__':
         total_noise_indices[0]*frame_time, (total_noise_indices[-1]+0)*frame_time+1, frame_time
     )
     total_noise_filenames = get_filenames(total_noise_dates, total_noise_exposures, total_noise_indices)
-    # calculate_total_noise_frame(
-    #     total_noise_filenames, total_noise_exposure_times, save_dir=noise_save_dir, gain=theoretical_gain)
-    # plot_noise_distribution(total_noise_filenames, noise_save_dir, '.total.fits', xlabel='Total Noise (e-)', unit='e-')
+    calculate_total_noise_frame(
+        total_noise_filenames, total_noise_exposure_times, save_dir=noise_save_dir, gain=theoretical_gain)
+    plot_noise_distribution(total_noise_filenames, noise_save_dir, '.total.fits', xlabel='Total Noise (e-)', unit='e-')
 
     # gain_exposures = [np.arange(3, 103)]
     # gain_exposures = [np.arange(10, 110)]  # HK run numbers
