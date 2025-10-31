@@ -11,25 +11,25 @@ show_line_plots = False
 show_optimization_fit_plot = True
 crop = False
 # obsdate = '20250616'
-obsdate = '20250620'
+obsdate = '20251007'
 # obsdate = '20240805'
 # obsdate = '20240524'
-# focus_data_dir = f'E:\\asdetector-data\\output\\reduced\\{obsdate}\\focus'
-focus_data_dir = f'E:\\asdetector-data\\output\\reduced\\{obsdate}'
+focus_data_dir = f'E:\\asdetector-data\\output\\reduced\\{obsdate}\\focus2'
+# focus_data_dir = f'E:\\asdetector-data\\output\\reduced\\{obsdate}'
 focus_data_files = [os.path.join(focus_data_dir, f) for f in os.listdir(focus_data_dir) if f.endswith('.fits')]
 yj_focus_data_files = [f for f in focus_data_files if f.endswith('YJ.fits')]
 hk_focus_data_files = [f for f in focus_data_files if f.endswith('HK.fits')]
 yj_focus_data_files.sort()
 hk_focus_data_files.sort()
 focus_data_info = {
-    # 'YJ': {
-    #     'y_range': (2359-30, 2359+30), 'x_range': (1962-60, 1962+60), 'data_files': yj_focus_data_files, 'vmin': 0, 'vmax': 10000
-    # },
+    'YJ': {
+        'y_range': (1900-30, 1900+30), 'x_range': (2040-60, 2040+60), 'data_files': yj_focus_data_files, 'vmin': 0, 'vmax': 5000
+    },
     # 'HK': {'y_range': (2265, 2358), 'x_range': (2176, 2319), 'data_files': hk_focus_data_files}
     'HK': {
         # 'y_range': (1855-30, 1855+30), 'x_range': (2088-80, 2088+80), 'data_files': hk_focus_data_files, 'vmin': 0, 'vmax': 30000
-        'y_range': (1820 - 30, 1820 + 30), 'x_range': (2000 - 30, 2000 + 30), 'data_files': hk_focus_data_files,
-        'vmin': 0, 'vmax': 5000
+        'y_range': (1805 - 30, 1805 + 30), 'x_range': (2017 - 30, 2017 + 30), 'data_files': hk_focus_data_files,
+        'vmin': 0, 'vmax': 15000
 
     }
 }
@@ -138,11 +138,11 @@ def main():
                 image = crop_image(image, str(_fit_num), show_images)
             fit_array = np.nanmedian(image, axis=0)
             fit_pix = np.arange(fit_array.shape[0])
-            # popt = minimize_gauss_fit(fit_pix, fit_array, _guess)
+            popt = minimize_gauss_fit(fit_pix, fit_array, _guess)
             # _guess = popt
             # popt = minimize_tophat_fit(fit_pix, fit_array)
-            # fit_info.append(np.abs(popt[2]))  # adding standard deviation to list TODO: uncomment
-            fit_info.append(np.std(image))  # TODO: comment out
+            fit_info.append(np.abs(popt[2]))  # adding standard deviation to list TODO: uncomment
+            # fit_info.append(np.std(image))  # TODO: comment out
             # fit_info.append(np.abs(popt[1]))  # adding mean to list
             # fit_info.append(np.abs(popt[0]))  # adding amplitude to list
             if show_line_plots:
