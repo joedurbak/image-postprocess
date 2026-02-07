@@ -45,15 +45,15 @@ def subtract_sky_and_normalize(science_data_directory, output_data_dir, sky):
 def sky_flat_and_normalize(science_data_directory, output_data_dir, sky):
     if not os.path.isdir(output_data_dir):
         os.makedirs(output_data_dir)
-    image_fnames = [os.path.join(science_data_directory, f) for f in os.listdir(science_data_directory) if f.endswith('flat.fits')]
+    image_fnames = [os.path.join(science_data_directory, f) for f in os.listdir(science_data_directory) if f.endswith('flat.fits') or f.endswith('.fits')]
     image_fnames.sort()
     cropsky = fits.getdata(sky)
     hdr_sky = fits.getheader(sky)
-    try:
-        airmass_sky = hdr_sky['AIRMASS']
-    except KeyError:
-        print('No Airmass value in sky header')
-        airmass_sky = 0
+    # try:
+    #     airmass_sky = hdr_sky['AIRMASS']
+    # except KeyError:
+    #     print('No Airmass value in sky header')
+    #     airmass_sky = 0
     for f in image_fnames:
         with fits.open(f) as hdul:
             image = hdul[0].data
