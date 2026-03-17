@@ -44,8 +44,8 @@ def get_radius(data, flux_frac=0.5, boxsize=400):
         return -1
     radii = cat.fluxfrac_radius(flux_frac).value
     diff = cat.fluxfrac_radius(0.8).value - radii
-    print(radii)
-    print(diff)
+    # print(radii)
+    # print(diff)
     tab=cat.to_table()
     radius = np.median(radii[radii > 1.5])
     return radius
@@ -62,26 +62,26 @@ def calc_focus(images, focus_vals, poly_order=3, plot_fit=True):
 
 
 def get_focus_curve(
-        path, camera_names=('YJ','HK'), camera_name_key='CAMNAME',
+        path, camera_names=('YJ',), camera_name_key='CAMNAME',  # change camera_names default to ('YJ', 'HK') when HK psf gets fixed
         focus_objtype_key='OBJTYPE', focus_objyype_val='tel_focus',
         focus_val_key='TELFOCUS', header_ext=0, image_ext=0,
     ):
-    print('Focus path: {}'.format(path))
+    # print('Focus path: {}'.format(path))
     if os.path.isdir(path):
-        print('Found directory: {}'.format(path))
+        # print('Found directory: {}'.format(path))
         file_list = [os.path.join(path, f) for f in os.listdir(path) if f.endswith('.fits')]
     else:
         file_list = path.split(',')
         for f in file_list:
             if not os.path.isfile(f):
                 raise FileNotFoundError('File not found: {}'.format(f))
-    print('Found {} files'.format(file_list))
+    # print('Found {} files'.format(file_list))
     cam_image_lists = {cam: ([], []) for cam in camera_names}
     for f in file_list:
         hdus = fits.open(f, mode='readonly')
         hdr = hdus[header_ext].header
         if hdr.get(focus_objtype_key, '').lower() == focus_objyype_val.lower():
-            print('{}'.format(f))
+            # print('{}'.format(f))
             cam_image_lists[hdr[camera_name_key]][0].append(hdus[image_ext].data)
             cam_image_lists[hdr[camera_name_key]][1].append(hdr[focus_val_key])
     focus_vals = []
@@ -99,8 +99,9 @@ def main():
     parser.add_argument("path", help="path to directory containing focus curve images, or comma separated list of files")
     args = parser.parse_args()
     focus_vals = get_focus_curve(args.path)
-    print('Focus values:\n{}'.format(focus_vals))
-    print('Average focus:\n{}'.format(np.mean(focus_vals)))
+    print(np.mean(focus_vals))
+    # print('Focus values:\n{}'.format(focus_vals))
+    # print('Average focus:\n{}'.format(np.mean(focus_vals)))
 
 
 if __name__ == '__main__':
